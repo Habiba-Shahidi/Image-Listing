@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
@@ -10,13 +10,11 @@ import {
   KeyboardAvoidingView,
   ScrollView,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import axios from 'axios';
 
-const DetailsScreen = (props) => {
+const DetailsScreen = props => {
   const navigation = useNavigation();
-
-  console.log('Properties received are', props.route.params.item);
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -33,7 +31,6 @@ const DetailsScreen = (props) => {
   const validateInputs = () => {
     let isValid = true;
 
-    // First Name validation
     if (!firstName.trim()) {
       setFirstNameError('First Name is required');
       isValid = false;
@@ -41,7 +38,6 @@ const DetailsScreen = (props) => {
       setFirstNameError(null);
     }
 
-    // Last Name validation
     if (!lastName.trim()) {
       setLastNameError('Last Name is required');
       isValid = false;
@@ -49,7 +45,6 @@ const DetailsScreen = (props) => {
       setLastNameError(null);
     }
 
-    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim() || !emailRegex.test(email)) {
       setEmailError('Enter a valid email address');
@@ -58,7 +53,6 @@ const DetailsScreen = (props) => {
       setEmailError(null);
     }
 
-    // Phone Number validation
     const phoneRegex = /^\d{10}$/;
     if (!phoneNumber.trim() || !phoneRegex.test(phoneNumber)) {
       setPhoneNumberError('Enter a valid 10-digit phone number');
@@ -73,7 +67,6 @@ const DetailsScreen = (props) => {
   const handleFormSubmit = async () => {
     try {
       if (!validateInputs()) {
-        // Stop form submission if validation fails
         return;
       }
 
@@ -95,12 +88,9 @@ const DetailsScreen = (props) => {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
-        }
+        },
       );
 
-      console.log('Response from server:', response.data);
-
-      // Set the server response message
       setServerResponse(response.data.message);
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -108,16 +98,14 @@ const DetailsScreen = (props) => {
   };
 
   const handleOkPress = () => {
-    // Navigate back to the previous screen
     navigation.goBack();
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <ScrollView contentContainerStyle={styles.scrollView}>
         <View style={styles.form}>
           {serverResponse ? (
-            // Display server response card
             <View style={styles.responseCard}>
               <Text style={styles.responseText}>{serverResponse}</Text>
               <TouchableOpacity style={styles.okButton} onPress={handleOkPress}>
@@ -125,9 +113,11 @@ const DetailsScreen = (props) => {
               </TouchableOpacity>
             </View>
           ) : (
-            // Display form
             <>
-              <Image source={{ uri: props.route.params.item.imageUrl }} style={styles.image} />
+              <Image
+                source={{uri: props.route.params.item.imageUrl}}
+                style={styles.image}
+              />
 
               <Text style={styles.EmailText}>First Name</Text>
               <View style={[styles.input, firstNameError && styles.inputError]}>
@@ -135,11 +125,13 @@ const DetailsScreen = (props) => {
                   placeholder="First Name"
                   placeholderTextColor="black"
                   value={firstName}
-                  onChangeText={(text) => setFirstName(text)}
-                  style={{ flex: 1 }}
+                  onChangeText={text => setFirstName(text)}
+                  style={styles.textInputText}
                 />
               </View>
-              {firstNameError && <Text style={styles.errorText}>{firstNameError}</Text>}
+              {firstNameError && (
+                <Text style={styles.errorText}>{firstNameError}</Text>
+              )}
 
               <Text style={styles.EmailText}>Last Name</Text>
               <View style={[styles.input, lastNameError && styles.inputError]}>
@@ -147,11 +139,13 @@ const DetailsScreen = (props) => {
                   placeholder="Last Name"
                   placeholderTextColor="black"
                   value={lastName}
-                  onChangeText={(text) => setLastName(text)}
-                  style={{ flex: 1 }}
+                  onChangeText={text => setLastName(text)}
+                  style={styles.textInputText}
                 />
               </View>
-              {lastNameError && <Text style={styles.errorText}>{lastNameError}</Text>}
+              {lastNameError && (
+                <Text style={styles.errorText}>{lastNameError}</Text>
+              )}
 
               <Text style={styles.EmailText}>Email</Text>
               <View style={[styles.input, emailError && styles.inputError]}>
@@ -159,28 +153,33 @@ const DetailsScreen = (props) => {
                   placeholder="Email"
                   placeholderTextColor="black"
                   value={email}
-                  onChangeText={(text) => setEmail(text)}
+                  onChangeText={text => setEmail(text)}
                   keyboardType="email-address"
-                  style={{ flex: 1 }}
+                  style={styles.textInputText}
                 />
               </View>
               {emailError && <Text style={styles.errorText}>{emailError}</Text>}
 
               <Text style={styles.EmailText}>Phone Number</Text>
-              <View style={[styles.input, phoneNumberError && styles.inputError]}>
+              <View
+                style={[styles.input, phoneNumberError && styles.inputError]}>
                 <TextInput
                   placeholder="Phone Number"
                   placeholderTextColor="black"
                   value={phoneNumber}
-                  onChangeText={(text) => setPhoneNumber(text)}
+                  onChangeText={text => setPhoneNumber(text)}
                   keyboardType="phone-pad"
-                  style={{ flex: 1 }}
+                  style={styles.textInputText}
                   maxLength={10}
                 />
               </View>
-              {phoneNumberError && <Text style={styles.errorText}>{phoneNumberError}</Text>}
+              {phoneNumberError && (
+                <Text style={styles.errorText}>{phoneNumberError}</Text>
+              )}
 
-              <TouchableOpacity style={styles.submitButton} onPress={handleFormSubmit}>
+              <TouchableOpacity
+                style={styles.submitButton}
+                onPress={handleFormSubmit}>
                 <Text style={styles.submitButtonText}>Submit</Text>
               </TouchableOpacity>
             </>
@@ -192,12 +191,6 @@ const DetailsScreen = (props) => {
 };
 
 export default DetailsScreen;
-
-
-   
-
-
-
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -243,8 +236,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
   },
-  errorText : {
-    color : 'red'
+  errorText: {
+    color: 'red',
   },
   responseCard: {
     backgroundColor: '#fff',
@@ -264,8 +257,13 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   okButtonText: {
-    textAlign : 'center',
+    textAlign: 'center',
     color: '#fff',
     fontSize: 16,
+  },
+  textInputText: {
+    color: 'black',
+    fontSize: 16,
+    flex: 1,
   },
 });
